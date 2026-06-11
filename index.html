@@ -35,7 +35,7 @@ function sign(h,a){ if(h===''||a===''||h==null||a==null) return ''; h=Number(h);
 function normFacit(raw){
  let out={};
  if(!raw) return out;
- const src = raw.matches || raw.facit || raw;
+ const src = raw.matches || raw.results || raw.facit || raw;
  if(Array.isArray(src)){ src.forEach(x=>{const nr=x.nr??x.match??x.id; const h=x.home??x.h??x.facitH; const a=x.away??x.b??x.facitB; if(nr && h!=='' && a!=='' && h!=null && a!=null) out[String(nr)]={home:Number(h),away:Number(a)};}); }
  else { Object.keys(src).forEach(k=>{const x=src[k]; if(x==null) return; const h=x.home??x.h??x.facitH; const a=x.away??x.b??x.facitB; if(h!=='' && a!=='' && h!=null && a!=null) out[String(k)]={home:Number(h),away:Number(a)}; }); }
  return out;
@@ -80,9 +80,7 @@ function renderTips(){
 function renderAdmin(){ let html=''; DATA.matches.forEach(m=>{const f=facit[String(m.nr)]||{home:'',away:''}; html+=`<div class="adminRow"><b>#${m.nr}</b><span>${m.hem} - ${m.borta}</span><input type="number" min="0" data-nr="${m.nr}" data-side="home" value="${f.home}"><input type="number" min="0" data-nr="${m.nr}" data-side="away" value="${f.away}"></div>`; }); $('adminRows').innerHTML=html; document.querySelectorAll('#adminRows input').forEach(inp=>inp.addEventListener('input',e=>{const nr=e.target.dataset.nr, side=e.target.dataset.side; facit[nr]=facit[nr]||{home:'',away:''}; facit[nr][side]=e.target.value===''?'':Number(e.target.value); if(facit[nr].home===''||facit[nr].away==='') delete facit[nr]; renderTop(); renderMatches(); renderTips(); })); }
 function renderAll(){ renderTop(); renderMatches(); renderTips(); renderAdmin(); }
 function download(name, text){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/json'})); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
-function exportCsv(){const rows=rankRows(standings()); let csv='Placering;Deltagare;Poäng;Exakta;Rätt tecken;Avgjorda
-'+rows.map(r=>[r.rank,r.name,r.points,r.exact,r.rightSign,r.done].join(';')).join('
-'); download('topplista.csv',csv);}
+function exportCsv(){const rows=rankRows(standings()); let csv='Placering;Deltagare;Poäng;Exakta;Rätt tecken;Avgjorda\n'+rows.map(r=>[r.rank,r.name,r.points,r.exact,r.rightSign,r.done].join(';')).join('\n'); download('topplista.csv',csv);}
 function init(){
  [...new Set(DATA.matches.map(m=>m.grupp).filter(Boolean))].sort().forEach(g=>{let o=document.createElement('option'); o.value=o.textContent=g; $('groupFilter').appendChild(o);});
  DATA.players.forEach(p=>{let o=document.createElement('option'); o.value=o.textContent=p.name; $('playerSelect').appendChild(o);});
