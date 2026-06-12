@@ -64,7 +64,7 @@ function normFacit(raw){
    const key = String(nr);
 
    // Ignorera metadata som råkat hamna under results, t.ex. "updated" eller "matches".
-   if(!/^\\d+$/.test(key)) return;
+   if(!/^\d+$/.test(key)) return;
 
    const h = item.home ?? item.h ?? item.facitH;
    const a = item.away ?? item.b ?? item.facitB;
@@ -130,7 +130,13 @@ function init(){
  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); ['top','matches','tips','admin'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab)); });
  $('search').oninput=renderTop; $('phaseFilter').onchange=renderMatches; $('groupFilter').onchange=renderMatches; $('playerSelect').onchange=renderTips; $('csv').onclick=exportCsv;
  $('login').onclick=()=>{if($('pwd').value===ADMIN_PASSWORD){$('loginBox').classList.add('hidden');$('adminBox').classList.remove('hidden');}else alert('Fel lösenord');};
- $('downloadFacit').onclick=()=>download('facit.json',JSON.stringify({updated:new Date().toISOString(),matches:facit},null,2));
+ $('downloadFacit').onclick=()=>{
+ const matches = DATA.matches.map(m=>{
+   const f = facit[String(m.nr)];
+   return {nr:m.nr,h:f?Number(f.home):null,b:f?Number(f.away):null};
+ });
+ download('facit.json',JSON.stringify({version:1,updatedBy:'K4 admin',exported:new Date().toISOString(),matches},null,2));
+};
  $('clearFacit').onclick=()=>{if(confirm('Töm facit på sidan? Exportera sedan tom facit.json om du vill nollställa GitHub.')){facit={}; renderAll();}};
  loadFacit();
 }
