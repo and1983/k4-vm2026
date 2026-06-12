@@ -14,6 +14,11 @@
 table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;color:#0c1f38;border-radius:12px;overflow:hidden} th{background:#081e38;color:#fff;text-align:left;padding:12px}td{padding:12px;border-bottom:1px solid #e5e9ef}tr:nth-child(even) td{background:#f1f4f8}tr.leader td{background:#fff7bd!important;font-weight:800} .medal{font-size:20px} .hidden{display:none!important} .note{color:var(--muted);font-size:14px} .statusok{color:#91ff9d;font-weight:800} .statusbad{color:#ff9e9e;font-weight:800} .pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:6px 10px;margin:3px;color:var(--muted)}
 .adminRow{display:grid;grid-template-columns:80px 1fr 90px 90px;gap:8px;align-items:center;padding:8px;border-bottom:1px solid rgba(255,255,255,.08)}
 .adminRow input{width:80px} .two{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:800px){.wrap{padding:10px}.grid,.two{grid-template-columns:1fr} table{font-size:13px}th,td{padding:8px}.adminRow{grid-template-columns:54px 1fr 62px 62px}.adminRow input{width:62px}}
+
+.grid-top{grid-template-columns:repeat(2,1fr)}
+.grid-facit{grid-template-columns:repeat(2,1fr);margin-top:14px;margin-bottom:0}
+@media(max-width:800px){.grid-top,.grid-facit{grid-template-columns:1fr}.grid-facit{margin-top:12px}}
+
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -30,8 +35,8 @@ table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;color
 <body><div class="wrap">
 <img class="banner" src="VM%20BAnner.png" alt="K4 Elektriskas VM-tippning 2026">
 <div class="tabs"><button class="active" data-tab="top">🏆 Topplista</button><button data-tab="matches">⚽ Matcher</button><button data-tab="tips">👥 Deltagarnas tips</button><button data-tab="admin">🔐 Facit/Admin</button></div>
-<div class="grid"><div class="stat"><small>Facitkälla</small><b id="source">Laddar...</b></div><div class="stat"><small>Matcher med facit</small><b id="done">0/104</b></div><div class="stat"><small>Ledare just nu</small><b id="leader">-</b></div><div class="stat"><small>Ledande poäng</small><b id="leadpts">0</b></div></div>
-<section id="top" class="card"><h2>Aktuell topplista</h2><div class="toolbar"><input id="search" placeholder="Sök deltagare..."><button id="csv">Exportera topplista CSV</button><span class="note" id="facitStatus"></span></div><div id="topTable"></div></section>
+<div class="grid grid-top"><div class="stat"><small>Ledare just nu</small><b id="leader">-</b></div><div class="stat"><small>Ledande poäng</small><b id="leadpts">0</b></div></div>
+<section id="top" class="card"><h2>Aktuell topplista</h2><div class="toolbar"><input id="search" placeholder="Sök deltagare..."><button id="csv">Exportera topplista CSV</button><span class="note" id="facitStatus"></span></div><div id="topTable"></div><div class="grid grid-facit"><div class="stat"><small>Facitkälla</small><b id="source">Laddar...</b></div><div class="stat"><small>Matcher med facit</small><b id="done">0/104</b></div></div></section>
 <section id="matches" class="card hidden"><h2>Matcher och facit</h2><div class="toolbar"><select id="phaseFilter"><option value="">Alla faser</option><option>Gruppspel</option><option>Slutspel</option></select><select id="groupFilter"><option value="">Alla grupper</option></select></div><div id="matchTable"></div></section>
 <section id="tips" class="card hidden"><h2>Deltagarnas låsta tips</h2><div class="toolbar"><select id="playerSelect"></select></div><div id="tipsTable"></div></section>
 <section id="admin" class="card hidden"><h2>Facit/Admin</h2><div id="loginBox"><p class="note">Logga in för att ändra facit. Facit sparas inte automatiskt på GitHub; exportera <b>facit.json</b> och ladda upp den i repot.</p><input type="password" id="pwd" placeholder="Adminlösenord"><button id="login">Logga in</button></div><div id="adminBox" class="hidden"><div class="toolbar"><button class="primary" id="downloadFacit">Ladda ner facit.json</button><button id="clearFacit">Töm lokalt facit</button><span class="note">Efter export: ersätt filen <b>facit.json</b> på GitHub.</span></div><div id="adminRows"></div></div></section>
