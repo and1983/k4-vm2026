@@ -46,9 +46,36 @@ function sign(h,a){ if(h===''||a===''||h==null||a==null) return ''; h=Number(h);
 function normFacit(raw){
  let out={};
  if(!raw) return out;
- const src = raw.matches || raw.results || raw.facit || raw;
- if(Array.isArray(src)){ src.forEach(x=>{const nr=x.nr??x.match??x.id; const h=x.home??x.h??x.facitH; const a=x.away??x.b??x.facitB; if(nr && h!=='' && a!=='' && h!=null && a!=null) out[String(nr)]={home:Number(h),away:Number(a)};}); }
- else { Object.keys(src).forEach(k=>{const x=src[k]; if(x==null) return; const h=x.home??x.h??x.facitH; const a=x.away??x.b??x.facitB; if(h!=='' && a!=='' && h!=null && a!=null) out[String(k)]={home:Number(h),away:Number(a)}; }); }
+
+ // Stödjer:
+ // 1) { "results": { "1": { "h": 2, "b": 0 } } }
+ // 2) { "matches": [ { "nr": 1, "h": 2, "b": 0 } ] }
+ // 3) { "matches": { "1": { "h": 2, "b": 0 } } }
+ // 4) äldre exportformat med home/away/facitH/facitB
+ const src = raw.results ?? raw.matches ?? raw.facit ?? raw;
+
+ function addResult(nr, item){
+   if(nr == null || item == null) return;
+   const key = String(nr);
+
+   // Ignorera metadata som råkat hamna under results, t.ex. "updated" eller "matches".
+   if(!/^\\d+$/.test(key)) return;
+
+   const h = item.home ?? item.h ?? item.facitH;
+   const a = item.away ?? item.b ?? item.facitB;
+
+   // Null eller tomt betyder ej spelad match och ska inte räknas som facit.
+   if(h === '' || a === '' || h == null || a == null) return;
+
+   out[key] = {home: Number(h), away: Number(a)};
+ }
+
+ if(Array.isArray(src)){
+   src.forEach(x => addResult(x?.nr ?? x?.match ?? x?.id ?? x?.MatchNr, x));
+ } else if(typeof src === 'object') {
+   Object.keys(src).forEach(k => addResult(k, src[k]));
+ }
+
  return out;
 }
 async function loadFacit(){
