@@ -15,6 +15,17 @@ table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;color
 .adminRow{display:grid;grid-template-columns:80px 1fr 90px 90px;gap:8px;align-items:center;padding:8px;border-bottom:1px solid rgba(255,255,255,.08)}
 .adminRow input{width:80px} .two{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:800px){.wrap{padding:10px}.grid,.two{grid-template-columns:1fr} table{font-size:13px}th,td{padding:8px}.adminRow{grid-template-columns:54px 1fr 62px 62px}.adminRow input{width:62px}}
 </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#061323">
+<meta name="application-name" content="K4 VM 2026">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="K4 VM 2026">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
 </head>
 <body><div class="wrap">
 <img class="banner" src="VM%20BAnner.png" alt="K4 Elektriskas VM-tippning 2026">
@@ -93,4 +104,14 @@ function init(){
 }
 init();
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .catch(err => console.warn('Service worker kunde inte registreras:', err));
+  });
+}
+</script>
+
 </body></html>
