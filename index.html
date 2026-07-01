@@ -113,7 +113,17 @@ function normFacit(raw){
    const a=item.away ?? item.b ?? item.facitB;
 
    if(h==='' || a==='' || h==null || a==null) return;
-   out[key]={home:Number(h),away:Number(a)};
+   out[key]={
+     home:Number(h),
+     away:Number(a),
+     display:item.display ?? item.resultat ?? item.result ?? null,
+     duration:item.duration ?? null,
+     winner:item.winner ?? null,
+     slutH:item.slutH ?? item.fullTimeHome ?? null,
+     slutB:item.slutB ?? item.fullTimeAway ?? null,
+     straffH:item.straffH ?? item.straffh ?? item.penaltyHome ?? null,
+     straffB:item.straffB ?? item.penaltyAway ?? null
+   };
  }
 
  if(Array.isArray(src)){
@@ -122,6 +132,11 @@ function normFacit(raw){
    Object.keys(src).forEach(k=>addResult(k, src[k]));
  }
  return out;
+}
+
+function facitText(f){
+ if(!f) return '-';
+ return f.display || (f.home+' - '+f.away);
 }
 
 async function loadFacit(){
@@ -206,7 +221,7 @@ function renderMatches(){
  let html='<table><thead><tr><th>Nr</th><th>Fas/Grupp</th><th>Datum</th><th>Match</th><th>Facit</th></tr></thead><tbody>';
  ms.forEach(m=>{
   const f=facitForMatch(m);
-  html+=`<tr><td>${m.nr}</td><td>${m.fas} ${m.grupp||''}</td><td>${m.datum} ${m.tid}</td><td><b>${m.hem}</b> - <b>${m.borta}</b><br><span class="note">${m.arena}</span></td><td>${f?f.home+' - '+f.away:'-'}</td></tr>`;
+  html+=`<tr><td>${m.nr}</td><td>${m.fas} ${m.grupp||''}</td><td>${m.datum} ${m.tid}</td><td><b>${m.hem}</b> - <b>${m.borta}</b><br><span class="note">${m.arena}</span></td><td>${facitText(f)}</td></tr>`;
  });
  $('matchTable').innerHTML=html+'</tbody></table>';
 }
@@ -223,7 +238,7 @@ function renderTips(){
    const ts=sign(t.home,t.away), fs=sign(f.home,f.away);
    pts=(Number(t.home)===Number(f.home)&&Number(t.away)===Number(f.away))?3:(ts===fs?1:0);
   }
-  html+=`<tr><td>${m.nr}</td><td>${m.hem} - ${m.borta}</td><td>${t?t.home+' - '+t.away:'-'}</td><td>${f?f.home+' - '+f.away:'-'}</td><td>${pts}</td></tr>`;
+  html+=`<tr><td>${m.nr}</td><td>${m.hem} - ${m.borta}</td><td>${t?t.home+' - '+t.away:'-'}</td><td>${facitText(f)}</td><td>${pts}</td></tr>`;
  });
  $('tipsTable').innerHTML=html+'</tbody></table>';
 }
